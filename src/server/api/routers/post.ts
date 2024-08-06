@@ -3,39 +3,80 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   protectedProcedure,
-  publicProcedure,
 } from "@/server/api/trpc";
 
 export const postRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
+  // uploadDocument: protectedProcedure
+  //   .input(z.object({ filekey: z.string() }))
+  //   .mutation(async ({ ctx, input }) => {
+  //     const { filekey } = input;
+  //     const user = ctx.session.user;
 
-  create: protectedProcedure
-    .input(z.object({ name: z.string().min(1) }))
-    .mutation(async ({ ctx, input }) => {
-      return ctx.db.post.create({
-        data: {
-          name: input.name,
-          createdBy: { connect: { id: ctx.session.user.id } },
-        },
-      });
-    }),
 
-  getLatest: protectedProcedure.query(async ({ ctx }) => {
-    const post = await ctx.db.post.findFirst({
-      orderBy: { createdAt: "desc" },
-      where: { createdBy: { id: ctx.session.user.id } },
-    });
 
-    return post ?? null;
-  }),
+     
+  //     return document;
+  //   }),
 
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
+    getAllDocuments: protectedProcedure
+        .query(async ({ctx}) => {
+          const response = ctx.db.document.findMany({
+            include: {
+              versions: {
+                orderBy: {
+                  version: 'desc',
+                },
+                take: 1,
+              },
+            },
+          })
+          return response;
+        }),
+
+      getDocumentsFromUser: protectedProcedure 
+      .input(z.object({ userID: z.string()}))
+      .mutation(async ({ctx, input}) => {
+
+        const { userID } = input;
+
+        const user = await ctx.db.user.findUnique({
+          where: { id: userID },
+          include: {
+            documents: {
+              include: {
+                versions: {
+                  orderBy: {
+                    version: 'desc',
+                  },
+                  take: 1,
+                },
+              },
+            },
+          },
+        })
+      
+        if (!user) throw new Error('User not found')
+        
+        // const documents = user.documents.map(doc => ({
+        //   id: doc.id,
+        //   documentType: doc.documentType,
+        //   createdAt: doc.createdAt,
+        //   updatedAt: doc.updatedAt,
+        //   currentStatus: doc.currentStatus,
+        //   latestVersion: doc.versions[0],
+        // }))
+
+      
+        return {
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          },
+          //  documents: documents,
+          documents: user.documents,
+        }
+      }
+    )
+
 });
