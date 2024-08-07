@@ -21,20 +21,16 @@ import { db } from "@/server/db";
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
-      id: string;
       name: string;
       email: string;
       image: string;
       role: string;
-      // ...other properties
-      // role: UserRole;
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface AdapterUser {
+    role: string;
+  }
 }
 
 /**
@@ -45,13 +41,13 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     session({ session, user }) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       session.user.role = user.role;
       return session
     }
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
-
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID || '',
       clientSecret: env.GOOGLE_CLIENT_SECRET || '',

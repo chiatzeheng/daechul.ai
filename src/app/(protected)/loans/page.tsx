@@ -37,8 +37,7 @@ export default function LoanApplicationPage() {
                         <Label htmlFor="loanAmount">Desired Loan Amount</Label>
                         <Input id="loanAmount" type="number" placeholder="10000" />
                     </div>
-                    {/* <FileUploadComponent />
-                     */}
+
                     <UploadFiles />
                     <Button className="w-full bg-gradient-to-br from-blue-600  hover:bg-blue-700 text-white">
                         Submit Application

@@ -1,61 +1,56 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button"
-import { BadgeDollarSign, ChevronRight, CreditCard } from 'lucide-react';
-import { getServerAuthSession } from '@/server/auth';
-import Navigation from '@/components/Navigation';
-import Avatar from '@/components/Avatar';
-import Loan from '@/components/Loan';
-import { redirect } from 'next/navigation'
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import LoansDisplay from './LoanDisplay';
+import Loading from './loading';
+import PaymentChart from '@/components/ChartsComponent';
 
-const loans = [
-    { name: 'Home Loan', amount: 250000, progress: 30 },
-    { name: 'Car Loan', amount: 35000, progress: 50 },
-    { name: 'Personal Loan', amount: 10000, progress: 75 },
-];
-
-export default async function LoanApplicationPage() {
-    const session = await getServerAuthSession()
-
+export default function LoanApplicationPage() {
     return (
-        <div className="min-h-screen bg-black text-gray-100">
-            <nav className="bg-gray-700 p-4 shadow-lg">
-                <div className="container mx-auto flex justify-between items-center">
-                    <Navigation />
-                    <Avatar session={session} />
-                </div>
-            </nav>
-
-            <main className="container mx-auto p-4">
-                <div className="grid grid-cols-2 md:grid-cols-2 gap-6">
-                    <Card className="bg-gradient-to-br from-blue-600 to bg-white text-white shadow-xl border-0">
+        <div className="min-h-screen bg-white text-gray-100">
+            <main className="container max-h-screen mx-auto p-4">
+                <div className="grid grid-cols-2 grid-rows-2 gap-6 h-[calc(100vh-6rem)]">
+                    <Card className="col-span-1 row-span-1 bg-gradient-to-br from-blue-500 to-pink-500 text-white shadow-xl border-0">
                         <CardHeader>
                             <CardTitle className="flex items-center text-2xl">
-                                <BadgeDollarSign className="mr-2" />
                                 Apply for new loan
                             </CardTitle>
+                            <CardContent className="flex flex-col justify-between h-full">
+                                <p>Get quick approval on your next loan!</p>
+                            </CardContent>
+                            <Link href="/loans" >
+                                <Button className="w-full bg-white text-black font-semibold text-lg py-3">
+                                    Apply Now
+                                </Button>
+                            </Link>
                         </CardHeader>
-                        <CardContent>
-                            <p className="mb-4 text-lg">Get quick approval on your next loan!</p>
-                            <Button onClick={redirect("/loans")} className="w-full bg-white text-blue-700 hover:bg-blue-100 font-semibold text-lg py-3">
-                                Apply Now <ChevronRight className="ml-2" />
-                            </Button>
-                        </CardContent>
+
                     </Card>
 
-                    <Card className="bg-white shadow-xl border-0">
+                    <Card className="col-span-1 row-span-2 bg-black shadow-xl border-0">
                         <CardHeader>
-                            <CardTitle className="flex items-center text-2xl">
-                                <CreditCard className="mr-2" />
+                            <CardTitle className="flex items-center text-2xl text-white">
                                 Your Loans
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                            {loans.map((loan, index) => (
-                                <Loan key={index} loan={loan} />
-                            ))}
+                        <CardContent className="rounded-lg overflow-auto max-h-[calc(100%-4rem)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-900">
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <LoansDisplay />
+                            </Suspense>
                         </CardContent>
                     </Card>
+
+                    <Suspense fallback={<Loading />}>
+                        <Card className="col-span-1 row-span-1 bg-black">
+                            <CardHeader>
+                                <CardTitle className="text-2xl text-white">Payments </CardTitle>
+                            </CardHeader>
+
+                            <PaymentChart />
+
+                        </Card>
+                    </Suspense>
                 </div>
             </main>
         </div>

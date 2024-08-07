@@ -50,7 +50,7 @@ export function Form() {
                     </CardContent>
                     <CardFooter className="flex flex-col space-y-2">
                         <Button className="w-full">Login</Button>
-                        <Button variant="outline" onClick={() => signIn('google', { callbackUrl: "/" })} className="w-full flex items-center justify-center">
+                        <Button variant="outline" onClick={() => signIn('google', { callbackUrl: "/dashboard" })} className="w-full flex items-center justify-center">
                             <FaGoogle className="mr-2" />
                             Sign in with Google
                         </Button>

@@ -1,3 +1,4 @@
+import Navigation from "@/components/Navigation"
 import { getServerAuthSession } from "@/server/auth"
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
@@ -10,8 +11,10 @@ const PublicLayout = async ({ children }: Props) => {
     if (!session?.user) {
         return redirect('/authenticate')
     }
+
     return (
         <Suspense>
+            <Navigation user={session?.user} />
             {children}
         </Suspense>
     )
