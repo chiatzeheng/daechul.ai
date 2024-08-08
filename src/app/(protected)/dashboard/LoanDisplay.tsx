@@ -1,6 +1,4 @@
-import Loan from './ApprovedLoan';
-import PendingLoan from './PendingLoan';
-import RejectedLoan from './RejectedLoan';
+import { ApprovedLoan, PendingLoan, RejectedLoan } from './Loans';
 import { loans } from '@/lib/data';
 
 const LoansDisplay = () => {
@@ -8,17 +6,17 @@ const LoansDisplay = () => {
         return <p className="text-white">No loans found.</p>;
     }
 
-
     return (
         <>
             {loans.map((loan, index) => {
                 switch (loan.status) {
                     case 'Approved':
-                        return <Loan key={`approved-${index}`} loan={loan} />;
+                        return <ApprovedLoan key={`approved-${index}`} loan={loan} />;
                     case 'Pending':
                         return <PendingLoan key={`pending-${index}`} loan={loan} />;
                     case 'Rejected':
-                        return <RejectedLoan key={`rejected-${index}`} loan={{ ...loan, reason: loan.reason || 'Not specified' }} />;
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                        return <RejectedLoan key={`rejected-${index}`} loan={{ ...loan, reason: loan?.reason || 'Not specified' }} />;
                 }
             })}
         </>

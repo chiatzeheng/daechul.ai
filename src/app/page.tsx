@@ -12,7 +12,7 @@ export default function SplashPage() {
 
 
     return (
-        <div className="min-h-screen bg-white text-black p-8 flex items-center justify-center">
+        <div className="bg-white text-black p-8 flex items-center justify-center">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

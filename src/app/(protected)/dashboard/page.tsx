@@ -8,9 +8,9 @@ import PaymentChart from '@/components/ChartsComponent';
 
 export default function LoanApplicationPage() {
     return (
-        <div className="min-h-screen bg-white text-gray-100">
-            <main className="container max-h-screen mx-auto p-4">
-                <div className="grid grid-cols-2 grid-rows-2 gap-6 h-[calc(100vh-6rem)]">
+        <div className="bg-black text-gray-100">
+            <main className="container mx-auto p-4">
+                <div className="grid grid-cols-2 grid-rows-2 gap-6 h-full">
                     <Card className="col-span-1 row-span-1 bg-gradient-to-br from-blue-500 to-pink-500 text-white shadow-xl border-0">
                         <CardHeader>
                             <CardTitle className="flex items-center text-2xl">
@@ -28,13 +28,13 @@ export default function LoanApplicationPage() {
 
                     </Card>
 
-                    <Card className="col-span-1 row-span-2 bg-black shadow-xl border-0">
+                    <Card className="col-span-1 row-span-2 bg-white shadow-xl border-0">
                         <CardHeader>
-                            <CardTitle className="flex items-center text-2xl text-white">
+                            <CardTitle className="flex items-center text-2xl text-black">
                                 Your Loans
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="rounded-lg overflow-auto max-h-[calc(100%-4rem)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-900">
+                        <CardContent className="rounded-lg overflow-auto max-h-screen scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-900">
                             <Suspense fallback={<div>Loading...</div>}>
                                 <LoansDisplay />
                             </Suspense>
@@ -42,9 +42,9 @@ export default function LoanApplicationPage() {
                     </Card>
 
                     <Suspense fallback={<Loading />}>
-                        <Card className="col-span-1 row-span-1 bg-black">
+                        <Card className="col-span-1 row-span-1 bg-white">
                             <CardHeader>
-                                <CardTitle className="text-2xl text-white">Payments </CardTitle>
+                                <CardTitle className="text-2xl text-black">Payments </CardTitle>
                             </CardHeader>
 
                             <PaymentChart />

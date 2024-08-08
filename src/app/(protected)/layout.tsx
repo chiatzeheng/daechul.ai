@@ -16,6 +16,7 @@ const PublicLayout = async ({ children }: Props) => {
         <Suspense>
             <Navigation user={session?.user} />
             {children}
+
         </Suspense>
     )
 }

@@ -29,8 +29,6 @@ type Props = {
 export default function Navbar({ user }: { user: Props }) {
     const [open, setOpen] = useState(false);
 
-
-
     useEffect(() => {
         const down = (e: KeyboardEvent) => {
             if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -43,53 +41,59 @@ export default function Navbar({ user }: { user: Props }) {
         return () => document.removeEventListener("keydown", down)
     }, [])
 
+
     return (
-        <nav className="flex h-16 mt-4 rounded-lg items-center bg-black mx-4 p-4 shadow-lg">
-            <div className="container >mx-auto flex justify-between items-center">
-                <div className="flex items-center space-x-4">
-                    <Link href="/" className="flex items-center space-x-2 text-white hover:text-gray-300">
-                        <span className="font-bold">Home</span>
+        <nav className="flex h-16 items-center bg-black pt-4">
+            <div className="container flex justify-between  items-center">
+                <div className="flex items-center space-x-6">
+                    <Link href="/">
+                        <h1 className=" text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-pink-500  hover:">Loan.AI</h1>
                     </Link>
-                    <Link href="/loans" className="text-white hover:text-gray-300">Loans</Link>
-                    <Link href="/apply" className="text-white hover:text-gray-300">Apply</Link>
+                    <Link href="/loans" className="text-white hover:text-gray-300">View Loans</Link>
+                    <Link href="/apply" className="text-white hover:text-gray-300">Loan Application</Link>
+                    {
+                        user.role === 'admin' ? <Link href="/admin" className="text-white hover:text-gray-300">Admin</Link> : null
+                    }
                 </div>
-                <div className="flex items-center space-x-4">
-                    <button
+
+                <div className="flex items-end space-x-12 justify-center">
+                    {/* <button
                         onClick={() => setOpen(true)}
-                        className="flex items-center space-x-2 bg-gray-800 px-3 py-2 rounded-md hover:bg-gray-700 text-white"
+                        className="flex flex-end space-x-3 x-3  rounded-bg-gray-700 text-white"
                     >
                         <Search className="h-4 w-4" />
                         <span className="text-sm">Search</span>
                         <kbd className="hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border bg-gray-700 px-1.5 font-mono text-[10px] font-medium text-gray-400">
                             <span className="text-xs">⌘</span>K
                         </kbd>
-                    </button>
-                </div>
-                <Dialog>
-                    <DialogTrigger>
-                        <Avatar className="bg-gray-700 hover:bg-gray-600 transition-colors cursor-pointer">
-                            <AvatarImage src={user.image} alt="avatar" />
-                            <AvatarFallback>{user.name?.[0] ?? "John"}</AvatarFallback>
-                        </Avatar>
-                    </DialogTrigger>
-                    <DialogContent className="bg-gray-800 text-gray-100">
-                        <DialogHeader>
-                            <DialogTitle>User Profile</DialogTitle>
-                        </DialogHeader>
-                        <div className="flex flex-col items-center space-y-4">
-                            <Avatar className="w-24 h-24">
+                    </button> */}
+
+                    <Dialog>
+                        <DialogTrigger>
+                            <Avatar className="bg-black  transition-colors cursor-pointer">
                                 <AvatarImage src={user.image} alt="avatar" />
                                 <AvatarFallback>{user.name?.[0] ?? "John"}</AvatarFallback>
                             </Avatar>
-                            <h2 className="text-xl font-semibold">{user.name}</h2>
-                            <p className="text-gray-300">{user.email}</p>
-                            <Link href="api/auth/signout">
-                                <Button className="bg-red-700" >Sign Out</Button>
-                            </Link>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            </div>
+                        </DialogTrigger>
+                        <DialogContent className="bg-black text-gray-100">
+                            <DialogHeader>
+                                <DialogTitle>User Profile</DialogTitle>
+                            </DialogHeader>
+                            <div className="flex flex-col items-center space-y-4">
+                                <Avatar className="w-24 h-24">
+                                    <AvatarImage src={user.image} alt="avatar" />
+                                    <AvatarFallback>{user.name?.[0] ?? "John"}</AvatarFallback>
+                                </Avatar>
+                                <h2 className="text-xl font-semibold">{user.name}</h2>
+                                <p className="text-gray-300">{user.email}</p>
+                                <Link href="api/auth/signout">
+                                    <Button className="bg-red-700" >Sign Out</Button>
+                                </Link>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </div >
             <CommandDialog open={open} onOpenChange={setOpen}>
                 <CommandInput placeholder="Type a command or search..." />
                 <CommandList>
@@ -128,6 +132,6 @@ export default function Navbar({ user }: { user: Props }) {
                     </CommandGroup>
                 </CommandList>
             </CommandDialog>
-        </nav>
+        </nav >
     );
 }
