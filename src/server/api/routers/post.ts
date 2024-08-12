@@ -6,18 +6,6 @@ import {
 } from "@/server/api/trpc";
 
 export const postRouter = createTRPCRouter({
-  // uploadDocument: protectedProcedure
-  //   .input(z.object({ filekey: z.string() }))
-  //   .mutation(async ({ ctx, input }) => {
-  //     const { filekey } = input;
-  //     const user = ctx.session.user;
-
-
-
-     
-  //     return document;
-  //   }),
-
     getAllDocuments: protectedProcedure
         .query(async ({ctx}) => {
           const response = ctx.db.document.findMany({
@@ -65,6 +53,7 @@ export const postRouter = createTRPCRouter({
         //   currentStatus: doc.currentStatus,
         //   latestVersion: doc.versions[0],
         // }))
+
 
       
         return {

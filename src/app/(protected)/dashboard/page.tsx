@@ -5,8 +5,11 @@ import Link from 'next/link';
 import LoansDisplay from './LoanDisplay';
 import Loading from './loading';
 import PaymentChart from '@/components/ChartsComponent';
+import { api } from '@/trpc/server'
 
-export default function LoanApplicationPage() {
+export default function Dashboard() {
+
+
     return (
         <div className="bg-black text-gray-100">
             <main className="container mx-auto p-4">
@@ -46,7 +49,6 @@ export default function LoanApplicationPage() {
                             <CardHeader>
                                 <CardTitle className="text-2xl text-black">Payments </CardTitle>
                             </CardHeader>
-
                             <PaymentChart />
 
                         </Card>

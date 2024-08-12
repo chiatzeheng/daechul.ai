@@ -16,15 +16,17 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from './ui/button';
-
-
+import { blurhash } from "@/lib/constants";
 
 type Props = {
-    name: string
-    email: string
-    image: string
-    role: string
+    id: string;
+    role: string;
+} & {
+    name?: string | null | undefined;
+    email?: string | null | undefined;
+    image?: string | null | undefined;
 }
+
 
 export default function Navbar({ user }: { user: Props }) {
     const [open, setOpen] = useState(false);
@@ -51,9 +53,7 @@ export default function Navbar({ user }: { user: Props }) {
                     </Link>
                     <Link href="/loans" className="text-white hover:text-gray-300">View Loans</Link>
                     <Link href="/application" className="text-white hover:text-gray-300">Loan Application</Link>
-                    {
-                        user.role === 'admin' ? <Link href="/admin" className="text-white hover:text-gray-300">Admin</Link> : null
-                    }
+
                 </div>
 
                 <div className="flex items-end space-x-12 justify-center">
@@ -71,7 +71,7 @@ export default function Navbar({ user }: { user: Props }) {
                     <Dialog>
                         <DialogTrigger>
                             <Avatar className="bg-black  transition-colors cursor-pointer">
-                                <AvatarImage src={user.image} alt="avatar" />
+                                <AvatarImage src={user?.image ?? blurhash} alt="avatar" />
                                 <AvatarFallback>{user.name?.[0] ?? "John"}</AvatarFallback>
                             </Avatar>
                         </DialogTrigger>
@@ -81,7 +81,7 @@ export default function Navbar({ user }: { user: Props }) {
                             </DialogHeader>
                             <div className="flex flex-col items-center space-y-4">
                                 <Avatar className="w-24 h-24">
-                                    <AvatarImage src={user.image} alt="avatar" />
+                                    <AvatarImage src={user.image ?? blurhash} alt="avatar" />
                                     <AvatarFallback>{user.name?.[0] ?? "John"}</AvatarFallback>
                                 </Avatar>
                                 <h2 className="text-xl font-semibold">{user.name}</h2>

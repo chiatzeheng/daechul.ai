@@ -6,25 +6,21 @@ import { Suspense } from "react"
 type Props = {
     children: React.ReactNode
 }
-const PublicLayout = async ({ children }: Props) => {
+const PrivateLayout = async ({ children }: Props) => {
     const session = await getServerAuthSession()
     if (!session?.user) {
         return redirect('/authenticate')
     }
+    const isAdmin = session.user.role === 'admin'
+    // if (isAdmin) return redirect('/homepage')
 
-    if (session?.user?.role === "admin") {
-        return redirect('/(admin)')
-    }
-
-
-
+    console.log(session?.user)
     return (
         <Suspense>
             <Navigation user={session?.user} />
             {children}
-
         </Suspense>
     )
 }
 
-export default PublicLayout
+export default PrivateLayout

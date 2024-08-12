@@ -5,7 +5,7 @@ import {
   protectedProcedure,
 } from "@/server/api/trpc";
 
-export const postRouter = createTRPCRouter({
+export const loanRouter= createTRPCRouter({
     getLoansByUserID: protectedProcedure
         .query(async ({ctx}) => {
             const res = ctx.db.loan.findMany({
