@@ -3,13 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import FileUploadComponent from '@/components/LoanUpload';
 import UploadFiles from '@/components/UploadFiles';
 
 export default function LoanApplicationPage() {
     return (
         <div className=" bg-black text-white p-8">
-            <h1 className="text-3xl font-bold mb-8">Loan Application</h1>
+            <h1 className="text-3xl font-bold mb-8">Applying for a Loan?</h1>
             <Card className="bg-white text-black">
                 <CardHeader>
                     <CardTitle>Personal Information</CardTitle>

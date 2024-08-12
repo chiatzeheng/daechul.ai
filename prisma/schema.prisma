@@ -20,6 +20,7 @@ model User {
     documents     Document[]
     notifications Notification[]
     auditLogs     AuditLog[]
+    loan          Loan[]
 }
 
 model Account {
@@ -82,6 +83,15 @@ model DocumentVersion {
 
     @@unique([documentId, version])
     @@index([documentId])
+}
+
+model Loan {
+    id        String         @id @default(cuid())
+    userId    String
+    amount    Float
+    status    DocumentStatus
+    createdAt DateTime       @default(now())
+    user      User           @relation(fields: [userId], references: [id])
 }
 
 enum DocumentStatus {

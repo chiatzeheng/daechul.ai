@@ -1,11 +1,12 @@
-const Loans = () => {
-
+const LoanPage = () => {
 
     return (
         <div>
 
         </div>
+
     )
+
 }
 
-export default Loans;
+export default LoanPage;

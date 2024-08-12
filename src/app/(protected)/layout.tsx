@@ -12,6 +12,12 @@ const PublicLayout = async ({ children }: Props) => {
         return redirect('/authenticate')
     }
 
+    if (session?.user?.role === "admin") {
+        return redirect('/(admin)')
+    }
+
+
+
     return (
         <Suspense>
             <Navigation user={session?.user} />

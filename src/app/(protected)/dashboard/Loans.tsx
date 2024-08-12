@@ -30,7 +30,6 @@ interface RejectedLoanProps {
         name: string;
         amount: number;
         date: string;
-        reason: string;
     };
 }
 
@@ -103,7 +102,7 @@ export function RejectedLoan({ loan }: RejectedLoanProps) {
                         <X className="mr-2" size={16} />
                         Rejection Date: {loan.date}
                     </p>
-                    <p className="text-red-600 font-medium">Reason: {loan.reason}</p>
+                    <p className="text-red-600 font-medium">Reason: Not Valid</p>
                 </div>
             </CardContent>
         </Card>

@@ -43,14 +43,14 @@ export default function Navbar({ user }: { user: Props }) {
 
 
     return (
-        <nav className="flex h-16 items-center bg-black pt-4">
+        <nav className="flex h-20 items-center bg-black ">
             <div className="container flex justify-between  items-center">
                 <div className="flex items-center space-x-6">
-                    <Link href="/">
-                        <h1 className=" text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-pink-500  hover:">Loan.AI</h1>
+                    <Link href="/dashboard">
+                        <h1 className=" text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-pink-500">Loan.AI</h1>
                     </Link>
                     <Link href="/loans" className="text-white hover:text-gray-300">View Loans</Link>
-                    <Link href="/apply" className="text-white hover:text-gray-300">Loan Application</Link>
+                    <Link href="/application" className="text-white hover:text-gray-300">Loan Application</Link>
                     {
                         user.role === 'admin' ? <Link href="/admin" className="text-white hover:text-gray-300">Admin</Link> : null
                     }

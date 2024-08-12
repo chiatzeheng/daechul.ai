@@ -10,7 +10,6 @@ import { features } from '@/lib/data';
 
 export default function SplashPage() {
 
-
     return (
         <div className="bg-white text-black p-8 flex items-center justify-center">
             <motion.div
