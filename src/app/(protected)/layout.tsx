@@ -8,13 +8,15 @@ type Props = {
 }
 const PrivateLayout = async ({ children }: Props) => {
     const session = await getServerAuthSession()
+
     if (!session?.user) {
         return redirect('/authenticate')
     }
-    const isAdmin = session.user.role === 'admin'
-    // if (isAdmin) return redirect('/homepage')
 
-    console.log(session?.user)
+    if (session?.user.role === 'admin') {
+        return redirect('/homepage')
+    }
+
     return (
         <Suspense>
             <Navigation user={session?.user} />

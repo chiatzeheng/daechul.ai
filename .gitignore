@@ -6,6 +6,7 @@
 .pnp.js
 .turbo
 
+venv
 
 # testing
 /coverage

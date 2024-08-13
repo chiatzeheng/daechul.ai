@@ -6,9 +6,10 @@ import LoansDisplay from './LoanDisplay';
 import Loading from './loading';
 import PaymentChart from '@/components/ChartsComponent';
 import { api } from '@/trpc/server'
+import { createId } from '@paralleldrive/cuid2';
+
 
 export default function Dashboard() {
-
 
     return (
         <div className="bg-black text-gray-100">
@@ -22,7 +23,7 @@ export default function Dashboard() {
                             <CardContent className="flex flex-col justify-between h-full">
                                 <p>Get quick approval on your next loan!</p>
                             </CardContent>
-                            <Link href="/loans" >
+                            <Link href={`/application/${createId()}`} >
                                 <Button className="w-full bg-white text-black font-semibold text-lg py-3">
                                     Apply Now
                                 </Button>

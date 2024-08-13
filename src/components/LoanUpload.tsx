@@ -4,11 +4,22 @@ import { useDropzone } from 'react-dropzone';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
+type FileProps = {
+    path: string
+    name: string
+    lastModified: number
+    lastModifiedDate: Date
+    webkitRelativePath: string,
+    size: number
+    type: string
+}
+
 export default function FileUploadComponent() {
     const [files, setFiles] = useState([]);
 
-    const onDrop = useCallback((acceptedFiles: any) => {
+    const onDrop = useCallback((acceptedFiles: FileProps[]) => {
         setFiles(prevFiles => [...prevFiles, ...acceptedFiles]);
+        console.log(acceptedFiles)
     }, []);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -31,7 +42,7 @@ export default function FileUploadComponent() {
                 <p className="text-center">
                     {isDragActive
                         ? "Drop the files here ..."
-                        : "Drag 'n' drop some files here, or click to select files"}
+                        : "Enter Supporting Documents"}
                 </p>
             </motion.div>
             {files.length > 0 && (
@@ -46,7 +57,9 @@ export default function FileUploadComponent() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 10 }}
                             >
-                                <span>{file.name}</span>
+                                <span>{file.name} </span>
+
+
                                 <button
                                     onClick={() => removeFile(file)}
                                     className="text-red-500 hover:text-red-700"

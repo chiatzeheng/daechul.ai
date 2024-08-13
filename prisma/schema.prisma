@@ -1,10 +1,9 @@
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["driverAdapters"]
+    provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
+    provider = "mysql"
     url      = env("DATABASE_URL")
 }
 
@@ -29,17 +28,18 @@ model Account {
     type                     String
     provider                 String
     providerAccountId        String
-    refresh_token            String?
-    access_token             String?
+    refresh_token            String? @db.Text
+    access_token             String? @db.Text
     expires_at               Int?
     token_type               String?
     scope                    String?
-    id_token                 String?
+    id_token                 String? @db.Text
     session_state            String?
     refresh_token_expires_in Int?
     user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
+    @@index([userId])
 }
 
 model Session {
@@ -48,6 +48,8 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
 }
 
 model VerificationToken {
@@ -79,7 +81,7 @@ model DocumentVersion {
     fileKey    String
     createdAt  DateTime       @default(now())
     status     DocumentStatus
-    comment    String?
+    comment    String?        @db.Text
 
     @@unique([documentId, version])
     @@index([documentId])
@@ -92,21 +94,19 @@ model Loan {
     status    DocumentStatus
     createdAt DateTime       @default(now())
     user      User           @relation(fields: [userId], references: [id])
-}
 
-enum DocumentStatus {
-    PENDING
-    APPROVED
-    REJECTED
+    @@index([userId])
 }
 
 model Notification {
     id        String   @id @default(cuid())
     userId    String
-    message   String
+    message   String   @db.Text
     read      Boolean  @default(false)
     createdAt DateTime @default(now())
     user      User     @relation(fields: [userId], references: [id])
+
+    @@index([userId])
 }
 
 model AuditLog {
@@ -114,8 +114,16 @@ model AuditLog {
     userId    String
     action    String
     timestamp DateTime @default(now())
-    details   String?
+    details   String?  @db.Text
     user      User     @relation(fields: [userId], references: [id])
+
+    @@index([userId])
+}
+
+enum DocumentStatus {
+    PENDING
+    APPROVED
+    REJECTED
 }
 
 enum Role {

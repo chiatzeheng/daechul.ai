@@ -7,7 +7,10 @@ type Props = {
 const PublicLayout = async ({ children }: Props) => {
     const session = await getServerAuthSession()
 
-    if (session?.user) {
+
+    if (session?.user.role === 'admin') {
+        return redirect('/homepage')
+    } else if (session?.user.role === 'user') {
         return redirect('/dashboard')
     }
 
