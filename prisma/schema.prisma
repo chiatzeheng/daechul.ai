@@ -8,18 +8,17 @@ datasource db {
 }
 
 model User {
-    id            String         @id @default(cuid())
+    id            String       @id @default(cuid())
     name          String?
-    email         String?        @unique
+    email         String?      @unique
     emailVerified DateTime?
     image         String?
-    role          Role           @default(user)
+    role          Role         @default(user)
     accounts      Account[]
     sessions      Session[]
     documents     Document[]
-    notifications Notification[]
     auditLogs     AuditLog[]
-    loan          Loan[]
+    loanBridges   LoanBridge[]
 }
 
 model Account {
@@ -61,50 +60,58 @@ model VerificationToken {
 }
 
 model Document {
-    id            Int               @id @default(autoincrement())
+    id            Int            @id @default(autoincrement())
     userId        String
-    user          User              @relation(fields: [userId], references: [id])
+    user          User           @relation(fields: [userId], references: [id])
     documentType  String
-    createdAt     DateTime          @default(now())
-    updatedAt     DateTime          @updatedAt
-    versions      DocumentVersion[]
-    currentStatus DocumentStatus    @default(PENDING)
+    currentStatus DocumentStatus @default(PENDING)
 
     @@index([userId])
 }
 
-model DocumentVersion {
-    id         Int            @id @default(autoincrement())
-    documentId Int
-    document   Document       @relation(fields: [documentId], references: [id])
-    version    Int
-    fileKey    String
-    createdAt  DateTime       @default(now())
-    status     DocumentStatus
-    comment    String?        @db.Text
+model LoanBridge {
+    id        String         @id @default(cuid())
+    userId    String
+    loanId    String
+    status    DocumentStatus
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @updatedAt
 
-    @@unique([documentId, version])
-    @@index([documentId])
+    user User @relation(fields: [userId], references: [id])
+    loan Loan @relation(fields: [loanId], references: [id])
+
+    @@unique([userId, loanId])
+    @@index([userId])
+    @@index([loanId])
 }
 
 model Loan {
-    id        String         @id @default(cuid())
-    userId    String
-    amount    Float
-    status    DocumentStatus
-    createdAt DateTime       @default(now())
-    user      User           @relation(fields: [userId], references: [id])
-
-    @@index([userId])
-}
-
-model Notification {
-    id        String   @id @default(cuid())
-    userId    String
-    message   String   @db.Text
-    read      Boolean  @default(false)
-    createdAt DateTime @default(now())
-    user      User     @relation(fields: [userId], references: [id])
+    id                String       @id @default(cuid())
+    userId            String
+    businessName      String
+    businessType      String
+    taxId             String
+    yearEstablished   Int
+    annualRevenue     Float
+    numberOfEmployees Int
+    businessAddress   String
+    city              String
+    state             String
+    zipCode           String
+    contactFirstName  String
+    contactLastName   String
+    contactEmail      String
+    contactPhone      String
+    amount            Float
+    loanPurpose       String
+    propertyType      String
+    propertyUse       String
+    creditScore       Int
+    downPayment       Float
+    hasCoBorrower     Boolean
+    createdAt         DateTime     @default(now())
+    updatedAt         DateTime     @updatedAt
+    loanBridge        LoanBridge[]
 
     @@index([userId])
 }
@@ -122,8 +129,10 @@ model AuditLog {
 
 enum DocumentStatus {
     PENDING
+    UNDER_REVIEW
     APPROVED
     REJECTED
+    CANCELLED
 }
 
 enum Role {

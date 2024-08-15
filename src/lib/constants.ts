@@ -4,7 +4,7 @@ export const formSchema = z.object({
     businessName: z.string().min(1, "Business name is required"),
     businessType: z.enum(["llc", "corporation", "partnership", "sole-proprietorship"]),
     taxId: z.string().regex(/^\d{2}-\d{7}$/, "Invalid Tax ID format"),
-    yearEstablished: z.number().int().min(1800).max(new Date().getFullYear()),
+    yearEstablished: z.string(),
     annualRevenue: z.number().positive("Annual revenue must be positive"),
     numberOfEmployees: z.number().int().min(1, "Number of employees must be at least 1"),
     businessAddress: z.string().min(1, "Business address is required"),
@@ -29,7 +29,7 @@ export const formSchema = z.object({
 export type FormType = z.infer<typeof formSchema>;
 
 
-export const defaultValues = {
+export const values = {
     businessName: "",
     businessType: "",
     taxId: "",
