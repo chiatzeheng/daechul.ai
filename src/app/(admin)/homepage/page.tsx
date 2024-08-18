@@ -1,16 +1,21 @@
 import React from 'react';
 import AdminTable from './AdminTable';
 import AdminSidebar from './AdminSidebar';
+import { api } from '@/trpc/server';
 
 
-const Page = () => {
+
+
+const Page = async () => {
+
+    const data = await api.loan.getAllLoans();
 
     return (
-        <div className="min-h-screen bg-black p-8">
+        <div className=" bg-black p-8">
             <div className="shadow-lg overflow-hidden">
                 <div className="grid grid-cols-4 grid-rows-1 gap-6 bg">
                     <AdminSidebar />
-                    <AdminTable />
+                    <AdminTable data={data} />
                 </div>
             </div>
         </div>

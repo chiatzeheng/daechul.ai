@@ -4,8 +4,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link'
-import { features } from '@/lib/data';
-
+import { features } from '@/lib/constants';
 
 
 export default function SplashPage() {

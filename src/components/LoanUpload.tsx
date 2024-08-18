@@ -1,76 +1,75 @@
 "use client"
-import React, { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { motion } from 'framer-motion';
-import { X } from 'lucide-react';
 
-type FileProps = {
-    path: string
-    name: string
-    lastModified: number
-    lastModifiedDate: Date
-    webkitRelativePath: string,
-    size: number
-    type: string
-}
+import { useDropzone } from "@uploadthing/react";
+import { generateClientDropzoneAccept } from "uploadthing/client";
+import { useState, useCallback } from "react";
+import { useUploadThing } from "@/lib/uploadthing";
+import { toast } from "./ui/use-toast";
+import { Upload } from "lucide-react";
 
-export default function FileUploadComponent() {
-    const [files, setFiles] = useState([]);
-
-    const onDrop = useCallback((acceptedFiles: FileProps[]) => {
-        setFiles(prevFiles => [...prevFiles, ...acceptedFiles]);
-        console.log(acceptedFiles)
+export default function MultiUploader() {
+    const [files, setFiles] = useState<File[]>([]);
+    const onDrop = useCallback((acceptedFiles: File[]) => {
+        setFiles(acceptedFiles);
     }, []);
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+    const { startUpload, permittedFileInfo } = useUploadThing(
+        "pdfAttachment",
+        {
+            onClientUploadComplete: () => {
+                toast({
+                    description: "Uploaded successfully!",
+                })
+            },
+            onUploadError: () => {
+                toast({
+                    description: "Error occurred while uploading",
+                })
+            },
+            onUploadBegin: () => {
+                toast({
+                    description: "Upload has begun",
+                })
+            },
+        },
+    );
 
-    const removeFile = (fileToRemove: never) => {
-        setFiles(files.filter(file => file !== fileToRemove));
-    };
+    const fileTypes = permittedFileInfo?.config
+        ? Object.keys(permittedFileInfo?.config)
+        : [];
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
+    });
 
     return (
-        <div className="mt-4">
-            <motion.div
-                {...getRootProps()}
-                className={`p-8 border-2 border-dashed rounded-lg cursor-pointer
-                            
-                            text-black`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-            >
-                <input {...getInputProps()} />
-                <p className="text-center">
-                    {isDragActive
-                        ? "Drop the files here ..."
-                        : "Enter Supporting Documents"}
-                </p>
-            </motion.div>
-            {files.length > 0 && (
-                <div className="mt-4">
-                    <h4 className="font-semibold mb-2">Uploaded Files:</h4>
-                    <ul className="space-y-2">
-                        {files.map((file, index) => (
-                            <motion.li
-                                key={index}
-                                className="flex items-center justify-between bg-white text-black p-2 rounded"
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: 10 }}
-                            >
-                                <span>{file.name} </span>
-
-
-                                <button
-                                    onClick={() => removeFile(file)}
-                                    className="text-red-500 hover:text-red-700"
-                                >
-                                    <X size={16} />
-                                </button>
-                            </motion.li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+        <div
+            {...getRootProps()}
+            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer transition-colors hover:border-blue-500"
+        >
+            <input {...getInputProps()} />
+            <div className="flex flex-col items-center space-y-4">
+                <Upload className="w-12 h-12 text-gray-400" />
+                {isDragActive ? (
+                    <p className="text-blue-500">Drop the files here...</p>
+                ) : (
+                    <p className="text-gray-500">Drag &amp; drop files here, or click to select files</p>
+                )}
+                {files.length > 0 && (
+                    <button
+                        onClick={() => startUpload(files)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+                    >
+                        Upload {files.length} file{files.length > 1 ? 's' : ''}
+                    </button>
+                )}
+                {files.length > 0 && (
+                    <p className="text-sm text-gray-500">
+                        {files.length} file{files.length > 1 ? 's' : ''} selected
+                    </p>
+                )}
+            </div>
         </div>
     );
 }

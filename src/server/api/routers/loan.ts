@@ -24,6 +24,15 @@ export const loanRouter = createTRPCRouter({
       });
     }),
 
+  getAllLoans: protectedProcedure
+    .query(async ({ ctx }) => {
+   
+      return ctx.db.loanBridge.findMany({
+        include: {
+          user: true,
+        },
+      });
+    }),
   getLoanByID: protectedProcedure
     .input(z.object({
       id: z.string(),
@@ -43,7 +52,35 @@ export const loanRouter = createTRPCRouter({
           },
         },
       });
+      if (!loan || !loan.loanBridge) {
+        throw new Error("Loan not found or not accessible");
+      }
 
+      return loan;
+    }),
+
+
+    getAdminLoanByID: protectedProcedure
+    .input(z.object({
+      id: z.string(),
+      userId: z.string(),
+    }))
+    .query(async ({ ctx, input }) => {
+
+      const { id, userId } = input;
+
+      const loan = await ctx.db.loan.findUnique({
+        where: {
+          id: id,
+        },
+        include: {
+          loanBridge: {
+            where: {
+              userId,
+            },
+          },
+        },
+      });
       if (!loan || !loan.loanBridge) {
         throw new Error("Loan not found or not accessible");
       }
@@ -121,4 +158,59 @@ export const loanRouter = createTRPCRouter({
         },
       });
     }),
+
+    postDocument: protectedProcedure
+    .input(z.object({
+      name: z.string(),
+      url: z.string(),
+      key: z.string(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      return ctx.db.document.create({
+        data: {
+          ...input,
+          userId,
+        },
+      });
+    }),
+
+  updateDocumentStatus: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      status: z.nativeEnum(DocumentStatus),
+    }))
+    .mutation(async ({ ctx, input }) => {
+
+      return ctx.db.document.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          status: input.status,
+        },
+        include: {
+          User: true,
+        },
+      });
+    }),
+
+  getDocuments: protectedProcedure
+  .input(z.object({
+    userId: z.string(),
+  }))
+  .query(async ({ ctx, input }) => {
+      const userId = input.userId;
+
+      return ctx.db.document.findMany({
+        where: {
+          userId,
+        },
+        include: {
+          User: true,
+        },
+      });
+    }),
+      
 });
