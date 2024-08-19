@@ -26,14 +26,16 @@ Our digital platform streamlines and automates the underwriting process for busi
 - Automated risk assessment
 - Clear and quick decisions on loan applications
 
+https://github.com/user-attachments/assets/abd6f447-1523-408b-bc44-8085cb7cea5e
+
 ## Core Technology
 
 Our platform leverages cutting-edge technology to deliver a seamless experience:
 
 - Upstage API for Document OCR, Layout Analysis, and LLM processing
-- Responsive web application with intuitive user interface
-- Secure cloud-based infrastructure for data storage and processing
-- API integrations with financial databases and credit bureaus
+- Shad/CN, TRPC , NextJS
+- UploadThing & S3
+- TiDB
 
 ## Who We Serve
 
