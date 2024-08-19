@@ -10,7 +10,7 @@ import { features } from '@/lib/constants';
 export default function SplashPage() {
 
     return (
-        <div className="bg-white text-black p-8 flex items-center justify-center">
+        <div className="bg-white h-screen text-black p-8 flex items-center justify-center">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -18,7 +18,7 @@ export default function SplashPage() {
                 className="max-w-4xl w-full"
             >
                 <h1 className=" text-6xl font-bold mb-6 text-center
-            text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-pink-500">Loan.AI</h1>
+            text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-pink-500">Daechul.AI</h1>
                 <a> We simplify the loan application process for Applicants & Stakeholders in the financial industry</a>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">

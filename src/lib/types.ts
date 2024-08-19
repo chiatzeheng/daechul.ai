@@ -36,3 +36,52 @@ export type LoanBridge = {
     loanBridge: LoanBridge[];
   };
   
+  export type LoanData = {
+    id: string;
+    userId: string;
+    loanId: string;
+    status: 'PENDING' | 'UNDER_REVIEW' | 'APPROVED' | 'REJECTED';
+    createdAt: Date;
+    updatedAt: Date;
+    loan: {
+      id: string;
+      businessName: string;
+      amount: number;
+    };
+  };
+  
+  export type LoansDisplayProps = {
+    data: LoanData[];
+  };
+
+  export interface LoanProps {
+    loan: {
+      id: string;
+      name: string;
+      amount: number;
+      progress: number;
+      status: string;
+      date: string;
+      duration: number;
+      interest: number;
+    };
+  }
+  
+  export interface PendingLoanProps {
+    loan: {
+      id: string;
+      name: string;
+      amount: number;
+      date: string;
+    };
+  }
+  
+  export interface RejectedLoanProps {
+    loan: {
+      id: string;
+      name: string;
+      amount: number;
+      date: string;
+    };
+  }
+  

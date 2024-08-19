@@ -3,37 +3,8 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, X } from 'lucide-react';
 import Link from 'next/link';
+import type { LoanProps, PendingLoanProps, RejectedLoanProps, LoansDisplayProps } from '@/lib/types';
 
-interface LoanProps {
-  loan: {
-    id: string;
-    name: string;
-    amount: number;
-    progress: number;
-    status: string;
-    date: string;
-    duration: number;
-    interest: number;
-  };
-}
-
-interface PendingLoanProps {
-  loan: {
-    id: string;
-    name: string;
-    amount: number;
-    date: string;
-  };
-}
-
-interface RejectedLoanProps {
-  loan: {
-    id: string;
-    name: string;
-    amount: number;
-    date: string;
-  };
-}
 
 export function ApprovedLoan({ loan }: LoanProps) {
   return (
@@ -112,26 +83,9 @@ export function RejectedLoan({ loan }: RejectedLoanProps) {
   );
 }
 
-// New LoanList component
-type LoanData = {
-  id: string;
-  userId: string;
-  loanId: string;
-  status: 'PENDING' | 'UNDER_REVIEW' | 'APPROVED' | 'REJECTED';
-  createdAt: Date;
-  updatedAt: Date;
-  loan: {
-    id: string;
-    businessName: string;
-    amount: number;
-  };
-};
 
-type LoansDisplayProps = {
-  data: LoanData[];
-};
 
-export const LoansDisplay: React.FC<LoansDisplayProps> = ({ data }) => {
+export const LoansDisplay = ({ data }: LoansDisplayProps) => {
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',

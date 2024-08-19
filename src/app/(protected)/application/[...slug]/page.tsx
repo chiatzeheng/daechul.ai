@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import type * as z from 'zod';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,21 +10,25 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { formSchema, stages } from '@/lib/constants';
 import LoanUpload from '@/components/LoanUpload';
+import { api } from '@/trpc/react';
+import { formSchema, stages, } from '@/lib/constants';
+import { toast } from '@/components/ui/use-toast';
 
 const MultiStageLoanApplication = () => {
     const [currentStage, setCurrentStage] = useState(0);
 
-    const form = useForm({
+    const uploadDocument = api.loan.submitLoanApplication.useMutation();
+
+    const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             businessName: "",
-            businessType: undefined,
+            businessType: "llc",
             taxId: "",
             yearEstablished: "",
-            annualRevenue: 0,
-            numberOfEmployees: 0,
+            annualRevenue: "",
+            numberOfEmployees: "",
             businessAddress: "",
             city: "",
             state: "",
@@ -33,12 +37,12 @@ const MultiStageLoanApplication = () => {
             contactLastName: "",
             contactEmail: "",
             contactPhone: "",
-            loanAmount: 0,
-            loanPurpose: undefined,
-            propertyType: undefined,
-            propertyUse: undefined,
-            creditScore: 300,
-            downPayment: 0,
+            amount: "",
+            loanPurpose: "purchase",
+            propertyType: "commercial",
+            propertyUse: "owner-occupied",
+            creditScore: "",
+            downPayment: "",
             hasCoBorrower: false,
             additionalComments: "",
             agreeToTerms: false
@@ -46,14 +50,34 @@ const MultiStageLoanApplication = () => {
         mode: 'onChange',
     });
 
-    const onSubmit = (data) => {
-        console.log(data);
-        // Handle form submission
+    const onSubmit = (data: z.infer<typeof formSchema>) => {
+        const convertedData = {
+            ...data,
+            yearEstablished: parseInt(data.yearEstablished, 10),
+            annualRevenue: parseFloat(data.annualRevenue),
+            numberOfEmployees: parseInt(data.numberOfEmployees, 10),
+            amount: parseFloat(data.amount),
+            creditScore: parseInt(data.creditScore, 10),
+            downPayment: parseFloat(data.downPayment)
+        };
+        uploadDocument.mutate(convertedData, {
+            onSuccess: () => {
+                toast({
+                    description: "Loan application submitted successfully!",
+                })
+            },
+            onError: () => {
+                toast({
+                    description: "Error submitting loan application",
+                    variant: "destructive"
+                })
+            },
+        })
     };
 
     const nextStage = async () => {
         const currentFields = stages[currentStage].fields;
-        const isValid = await form.trigger(currentFields);
+        const isValid = await form.trigger(currentFields as Array<keyof z.infer<typeof formSchema>>);
         if (isValid) {
             setCurrentStage((prev) => Math.min(prev + 1, stages.length - 1));
         }
@@ -67,18 +91,17 @@ const MultiStageLoanApplication = () => {
         const stage = stages[currentStage];
         return (
             <>
-
                 {stage.fields.map((fieldName) => (
                     <FormField
                         key={fieldName}
                         control={form.control}
-                        name={fieldName}
+                        name={fieldName as keyof z.infer<typeof formSchema>}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>{fieldName.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}</FormLabel>
                                 <FormControl>
                                     {fieldName === 'businessType' ? (
-                                        <Select onValueChange={field.onChange} value={field.value}>
+                                        <Select onValueChange={field.onChange} value={field.value as string}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select business type" />
                                             </SelectTrigger>
@@ -90,7 +113,7 @@ const MultiStageLoanApplication = () => {
                                             </SelectContent>
                                         </Select>
                                     ) : fieldName === 'loanPurpose' ? (
-                                        <Select onValueChange={field.onChange} value={field.value}>
+                                        <Select onValueChange={field.onChange} value={field.value as string}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select loan purpose" />
                                             </SelectTrigger>
@@ -102,7 +125,7 @@ const MultiStageLoanApplication = () => {
                                             </SelectContent>
                                         </Select>
                                     ) : fieldName === 'propertyType' ? (
-                                        <Select onValueChange={field.onChange} value={field.value}>
+                                        <Select onValueChange={field.onChange} value={field.value as string}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select property type" />
                                             </SelectTrigger>
@@ -115,7 +138,7 @@ const MultiStageLoanApplication = () => {
                                             </SelectContent>
                                         </Select>
                                     ) : fieldName === 'propertyUse' ? (
-                                        <Select onValueChange={field.onChange} value={field.value}>
+                                        <Select onValueChange={field.onChange} value={field.value as string}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select property use" />
                                             </SelectTrigger>
@@ -124,14 +147,24 @@ const MultiStageLoanApplication = () => {
                                                 <SelectItem value="investment">Investment Property</SelectItem>
                                             </SelectContent>
                                         </Select>
-                                    ) : fieldName === 'hasCoBorrower' ? (
-                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                    ) : fieldName === 'hasCoBorrower' || fieldName === 'agreeToTerms' ? (
+                                        <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
                                     ) : fieldName === 'additionalComments' ? (
                                         <Textarea {...field} />
-                                    ) : fieldName === 'agreeToTerms' ? (
-                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                    ) : fieldName === 'yearEstablished' || fieldName === 'annualRevenue' || fieldName === 'numberOfEmployees' || fieldName === 'amount' || fieldName === 'creditScore' || fieldName === 'downPayment' ? (
+                                        <Input
+                                            {...field}
+                                            type="number"
+                                            min={fieldName === 'yearEstablished' ? 1800 : fieldName === 'creditScore' ? 300 : 0}
+                                            max={fieldName === 'yearEstablished' ? new Date().getFullYear() : fieldName === 'creditScore' ? 850 : undefined}
+                                            step={fieldName === 'annualRevenue' || fieldName === 'amount' || fieldName === 'downPayment' ? '0.01' : '1'}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                field.onChange(value === "" ? "" : value);
+                                            }}
+                                        />
                                     ) : (
-                                        <Input {...field} type={fieldName.includes('Amount') || fieldName === 'annualRevenue' || fieldName === 'numberOfEmployees' || fieldName === 'creditScore' || fieldName === 'downPayment' ? 'number' : 'text'} />
+                                        <Input {...field} type="text" />
                                     )}
                                 </FormControl>
                                 <FormMessage />
@@ -142,12 +175,12 @@ const MultiStageLoanApplication = () => {
                 {stage.id === 'review' && (
                     <div className="space-y-2 mt-4">
                         <h3 className="text-lg font-semibold">Application Summary</h3>
-                        {stages.flatMap(s => s.fields).filter(f => f !== 'agreeToTerms').map(fieldName => (
+                        {Object.entries(form.getValues()).map(([fieldName, value]) => (
                             <p key={fieldName}>
                                 <strong>{fieldName.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}:</strong>
-                                {fieldName === 'hasCoBorrower'
-                                    ? (form.getValues(fieldName) ? 'Yes' : 'No')
-                                    : form.getValues(fieldName)?.toString() || 'Not provided'}
+                                {fieldName === 'hasCoBorrower' || fieldName === 'agreeToTerms'
+                                    ? (value ? 'Yes' : 'No')
+                                    : value?.toString() || 'Not provided'}
                             </p>
                         ))}
                     </div>

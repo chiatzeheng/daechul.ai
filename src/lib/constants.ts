@@ -4,9 +4,33 @@ export const formSchema = z.object({
     businessName: z.string().min(1, "Business name is required"),
     businessType: z.enum(["llc", "corporation", "partnership", "sole-proprietorship"]),
     taxId: z.string().min(1, "Tax ID is required"),
-    yearEstablished: z.string().min(1, "Year established is required"),
-    annualRevenue: z.string().min(0, "Annual revenue must be a positive number"),
-    numberOfEmployees: z.string().min(1, "Number of employees must be at least 1"),
+    yearEstablished: z.string()
+        .min(1, "Year established is required")
+        .refine(
+            (val) => {
+                const year = parseInt(val, 10);
+                return !isNaN(year) && year >= 1800 && year <= new Date().getFullYear();
+            },
+            {
+                message: "Year must be between 1800 and current year",
+            }
+        ),
+    annualRevenue: z.string()
+        .min(1, "Annual revenue is required")
+        .refine(
+            (val) => !isNaN(parseFloat(val)) && parseFloat(val) >= 0,
+            {
+                message: "Annual revenue must be a positive number",
+            }
+        ),
+    numberOfEmployees: z.string()
+        .min(1, "Number of employees is required")
+        .refine(
+            (val) => !isNaN(parseInt(val, 10)) && parseInt(val, 10) > 0,
+            {
+                message: "Number of employees must be a positive integer",
+            }
+        ),
     businessAddress: z.string().min(1, "Business address is required"),
     city: z.string().min(1, "City is required"),
     state: z.string().min(1, "State is required"),
@@ -15,53 +39,47 @@ export const formSchema = z.object({
     contactLastName: z.string().min(1, "Last name is required"),
     contactEmail: z.string().email("Invalid email address"),
     contactPhone: z.string().min(1, "Phone number is required"),
-    loanAmount: z.string().min(1, "Loan amount must be greater than 0"),
+    amount: z.string()
+        .min(1, "Loan amount is required")
+        .refine(
+            (val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0,
+            {
+                message: "Loan amount must be greater than 0",
+            }
+        ),
     loanPurpose: z.enum(["purchase", "refinance", "expansion", "equipment"]),
-    propertyType: z.enum(["commercial", "industria-l", "retail", "office", "mixed-use"]),
+    propertyType: z.enum(["commercial", "industrial", "retail", "office", "mixed-use"]),
     propertyUse: z.enum(["owner-occupied", "investment"]),
-    creditScore: z.number().int().min(300).max(850, "Credit score must be between 300 and 850"),
-    downPayment: z.string().min(0, "Down payment must be a positive number"),
+    creditScore: z.string()
+        .min(1, "Credit score is required")
+        .refine(
+            (val) => {
+                const score = parseInt(val, 10);
+                return !isNaN(score) && score >= 300 && score <= 850;
+            },
+            {
+                message: "Credit score must be between 300 and 850",
+            }
+        ),
+    downPayment: z.string()
+        .min(1, "Down payment is required")
+        .refine(
+            (val) => !isNaN(parseFloat(val)) && parseFloat(val) >= 0,
+            {
+                message: "Down payment must be a positive number",
+            }
+        ),
     hasCoBorrower: z.boolean(),
     additionalComments: z.string().optional(),
     agreeToTerms: z.boolean().refine(val => val === true, "You must agree to the terms and conditions")
 });
 
 export const stages = [
-    {
-        id: 'business',
-        title: 'Business Information',
-        fields: ['businessName', 'businessType', 'taxId', 'yearEstablished', 'annualRevenue', 'numberOfEmployees']
-    },
-    {
-        id: 'address',
-        title: 'Business Address',
-        fields: ['businessAddress', 'city', 'state', 'zipCode']
-    },
-    {
-        id: 'contact',
-        title: 'Contact Information',
-        fields: ['contactFirstName', 'contactLastName', 'contactEmail', 'contactPhone']
-    },
-    {
-        id: 'loan',
-        title: 'Loan Details',
-        fields: ['loanAmount', 'loanPurpose', 'propertyType', 'propertyUse']
-    },
-    {
-        id: 'financial',
-        title: 'Financial Information',
-        fields: ['creditScore', 'downPayment', 'hasCoBorrower', 'additionalComments']
-    },
-    { 
-        id: 'documents', 
-        title: 'Document Upload', 
-        fields: [] 
-      },
-    {
-        id: 'review',
-        title: 'Review and Submit',
-        fields: ['agreeToTerms']
-    },
+    { id: 'business-info', title: 'Business Information', fields: ['businessName', 'businessType', 'taxId', 'yearEstablished', 'annualRevenue', 'numberOfEmployees'] },
+    { id: 'contact-info', title: 'Contact Information', fields: ['businessAddress', 'city', 'state', 'zipCode', 'contactFirstName', 'contactLastName', 'contactEmail', 'contactPhone'] },
+    { id: 'loan-details', title: 'Loan Details', fields: ['amount', 'loanPurpose', 'propertyType', 'propertyUse'] },
+    { id: 'financial-info', title: 'Financial Information', fields: ['creditScore', 'downPayment', 'hasCoBorrower'] },
+    { id: 'review', title: 'Review and Submit', fields: ['additionalComments', 'agreeToTerms'] }
 ];
 
 

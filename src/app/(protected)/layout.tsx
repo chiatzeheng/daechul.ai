@@ -16,7 +16,6 @@ const PrivateLayout = async ({ children }: Props) => {
     if (session?.user.role === 'admin') {
         return redirect('/homepage')
     }
-    console.log(session?.user)
     return (
         <Suspense>
             <Navigation user={session?.user} />

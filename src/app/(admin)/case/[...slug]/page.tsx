@@ -6,6 +6,7 @@ import Link from 'next/link';
 import ActionPanel from './Action';
 import LoanDetails from './Loan';
 import DocumentList from './Document';
+import FinancialReport from './FinancialReport';
 
 
 
@@ -13,24 +14,27 @@ import DocumentList from './Document';
 const LoanDashboard = async ({ params }: { params: { slug: string, userId: string } }) => {
     const data = await api.loan.getAdminLoanByID({ id: params.slug[0] ?? '1', userId: params.slug[1] ?? '1' });
 
-    const documents = await api.loan.getDocuments({ userId: params.slug[1] ?? '1' });
+    const passedData = data
+    delete passedData.loanBridge
 
-    console.log(documents)
+    const documents = await api.loan.getDocuments({ userId: params.slug[1] ?? '1' })
+
+    console.log(documents);
 
     if (!data) {
         return <div>Loan not found</div>;
     }
 
-    const mockDocuments = [
-        { name: "Business License" },
-        { name: "Financial Statements" },
-        { name: "Tax Returns" },
-        { name: "Property Appraisal" },
-    ];
+    const docs = []
 
-    console.log(data)
+    for (const document of documents) {
+        docs.push(document.url)
+    }
+
+
+
     return (
-        <div className="max-w-7xl mx-auto p-4">
+        <div className=" p-4">
             <div className="mb-4">
                 <Link href="/homepage" passHref>
                     <Button variant="outline" size="sm">
@@ -43,13 +47,15 @@ const LoanDashboard = async ({ params }: { params: { slug: string, userId: strin
                 <div className="col-span-1 row-span-2">
                     <LoanDetails data={data} />
                 </div>
-                <div>
-                    <DocumentList documents={mockDocuments} />
+                <div className="col-span-1 row-span-2">
+                    <DocumentList documents={documents} />
                 </div>
                 <div>
-                    <ActionPanel id={data.id} />
                 </div>
             </div>
+            <FinancialReport data={passedData} documents={docs} />
+            <ActionPanel id={data?.loanBridge?.[0]?.loanId ?? ''} userId={data?.loanBridge?.[0]?.userId ?? ''} />
+
         </div>
     );
 };

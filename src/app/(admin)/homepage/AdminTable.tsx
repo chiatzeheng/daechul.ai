@@ -20,43 +20,67 @@ type LoanData = {
     }
 };
 
-const AdminTable = ({ data }: { data: LoanData[] }) => {
+function capitalizeFirst(word: string) {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
 
-    return (
-        <div className="rounded-lg col-span-3 p-8 bg-white min-h-screen">
-            <h1 className="text-2xl font-bold mb-6">Pending Loans</h1>
 
+const AdminTables = ({ data }: { data: LoanData[] }) => {
+
+    console.log(data);
+    // Group loans by status
+    const groupedLoans = data.reduce((acc, loan) => {
+        if (!acc[loan.status]) {
+            acc[loan.status] = [];
+        }
+        acc[loan?.status].push(loan);
+        return acc;
+    }, {} as Record<string, LoanData[]>);
+
+    const renderTable = (loans: LoanData[], status: string) => (
+        <div key={status} className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">{capitalizeFirst(status)} Loans</h2>
             <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[200px]">Name</TableHead>
-                        <TableHead>Status</TableHead>
                         <TableHead>Email</TableHead>
+                        <TableHead>Loan ID</TableHead>
                         <TableHead>Created At</TableHead>
                         <TableHead>Icon</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data.map((loanData) => (
+                    {loans.map((loanData) => (
 
-                        < TableRow key={loanData.id} className="cursor-pointer hover:bg-gray-50 m-8" >
+                        <TableRow key={loanData.id} className="cursor-pointer hover:bg-gray-50">
                             <TableCell className="font-medium">
                                 <Link href={`/case/${loanData.loanId}/${loanData.userId}`} className="flex items-center">
                                     <span className="ml-2">{loanData.user.name}</span>
                                 </Link>
                             </TableCell>
-                            <TableCell>{loanData.status}</TableCell>
                             <TableCell>{loanData.user.email}</TableCell>
+                            <TableCell>{loanData.loanId}</TableCell>
+
                             <TableCell>{new Date(loanData.createdAt).toLocaleString()}</TableCell>
-                            <TableCell> <Avatar className="h-8 w-8">
-                                <AvatarImage src={loanData.user.image} alt={`${loanData.user.name}'s avatar`} />
-                            </Avatar></TableCell>
+                            <TableCell>
+                                <Avatar className="h-8 w-8">
+                                    <AvatarImage src={loanData.user.image} alt={`${loanData.user.name}'s avatar`} />
+                                </Avatar>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
-        </div >
-    )
-}
+        </div>
+    );
 
-export default AdminTable;
+    return (
+        <div className="rounded-lg col-span-3 p-8 bg-white">
+
+            {Object.entries(groupedLoans).map(([status, loans]) => renderTable(loans, status))}
+        </div>
+    );
+};
+
+export default AdminTables;

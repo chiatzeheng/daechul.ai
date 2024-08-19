@@ -4,6 +4,7 @@ import {
   protectedProcedure,
 } from "@/server/api/trpc";
 import { DocumentStatus } from '@prisma/client';
+import axios from 'axios';
 
 export const loanRouter = createTRPCRouter({
   getLoanStatuses: protectedProcedure
@@ -31,6 +32,9 @@ export const loanRouter = createTRPCRouter({
         include: {
           user: true,
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
     }),
   getLoanByID: protectedProcedure
@@ -51,6 +55,7 @@ export const loanRouter = createTRPCRouter({
             },
           },
         },
+        
       });
       if (!loan || !loan.loanBridge) {
         throw new Error("Loan not found or not accessible");
@@ -138,15 +143,15 @@ export const loanRouter = createTRPCRouter({
   updateLoanStatus: protectedProcedure
     .input(z.object({
       loanId: z.string(),
+      userId: z.string(),
       status: z.nativeEnum(DocumentStatus),
     }))
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.session.user.id;
 
       return ctx.db.loanBridge.update({
         where: {
           userId_loanId: {
-            userId,
+            userId: input.userId,
             loanId: input.loanId,
           },
         },
@@ -159,6 +164,13 @@ export const loanRouter = createTRPCRouter({
       });
     }),
 
+
+    // userId        String
+    // name          String
+    // key           String         @unique
+    // url           String         @unique
+    // currentStatus DocumentStatus @default(PENDING)
+
     postDocument: protectedProcedure
     .input(z.object({
       name: z.string(),
@@ -166,15 +178,13 @@ export const loanRouter = createTRPCRouter({
       key: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.session.user.id;
-
       return ctx.db.document.create({
-        data: {
-          ...input,
-          userId,
+        data: {...input,
+          userId: ctx.session.user.id,
         },
       });
     }),
+
 
   updateDocumentStatus: protectedProcedure
     .input(z.object({
@@ -184,11 +194,11 @@ export const loanRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
 
       return ctx.db.document.update({
-        where: {
+        where: {  
           id: input.id,
         },
         data: {
-          status: input.status,
+          currentStatus: input.status,
         },
         include: {
           User: true,
@@ -201,16 +211,72 @@ export const loanRouter = createTRPCRouter({
     userId: z.string(),
   }))
   .query(async ({ ctx, input }) => {
-      const userId = input.userId;
+
 
       return ctx.db.document.findMany({
         where: {
-          userId,
+          userId: input.userId,
+
+        },
+
+      
+      });
+    }),
+
+    deleteDocument: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+
+      return ctx.db.document.delete({
+        where: {  
+          id: input.id,
         },
         include: {
           User: true,
         },
       });
     }),
-      
+
+    generateAIUnderwritingReport: protectedProcedure
+    .input(z.object({
+      data: z.object({
+        businessName: z.string(),
+        businessType: z.string(),
+        taxId: z.string(),
+        yearEstablished: z.number().int(),
+        annualRevenue: z.number(),
+        numberOfEmployees: z.number().int(),
+        businessAddress: z.string(),
+        city: z.string(),
+        state: z.string(),
+        zipCode: z.string(),
+        contactFirstName: z.string(),
+        contactLastName: z.string(),
+        contactEmail: z.string().email(),
+        contactPhone: z.string(),
+        amount: z.number(),
+        loanPurpose: z.string(),
+        propertyType: z.string(),
+        propertyUse: z.string(),
+        creditScore: z.number().int(),
+        downPayment: z.number(),
+        hasCoBorrower: z.boolean(),
+      }),
+      documents: z.array(z.string()),
+    }))
+    .mutation(async ({ input }) => {
+      const { data, documents } = input;
+
+      const response = await axios.post('http://0.0.0.0:8000/evaluate-loan', { data, documents }, {
+
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    console.log(response.data);
+     return response.data;
+  })
+
 });

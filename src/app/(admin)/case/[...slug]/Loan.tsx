@@ -1,7 +1,9 @@
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import InfoItem from '@/components/InfoItem';
-import { BusinessLoanApplication } from '@/lib/types';
+import type { BusinessLoanApplication } from '@/lib/types';
+import { FileText } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const formatCurrency = (amount: number) => `$${amount.toLocaleString()}`;
 const formatDate = (date: Date) => new Date(date).toLocaleDateString();
@@ -40,7 +42,7 @@ const LoanDetails = ({ data }: { data: BusinessLoanApplication }) => (
             <div className="mt-6">
                 <h2 className="text-xl font-semibold mb-2">Loan Status</h2>
                 <ul className="space-y-2">
-                    {data.loanBridge.map((bridge) => (
+                    {data.loanBridge?.map((bridge) => (
                         <li key={bridge.id} className="flex justify-between items-center">
                             <Badge variant="outline" className="text-xs px-2 py-1">
                                 {bridge.status}
@@ -53,7 +55,9 @@ const LoanDetails = ({ data }: { data: BusinessLoanApplication }) => (
                 </ul>
             </div>
         </CardContent>
+
     </Card>
+
 );
 
 
