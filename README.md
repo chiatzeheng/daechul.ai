@@ -1,29 +1,69 @@
-# Create T3 App
+# Business Mortgage Underwriting Platform
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Streamlining the business mortgage underwriting process through innovative technology and automation.
 
-## What's next? How do I make an app with this?
+## Problem
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+The traditional underwriting process for business mortgages is often complex, time-consuming, and opaque. Businesses seeking mortgage financing face:
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- Lengthy wait times
+- Unclear requirements
+- Inconsistent evaluation criteria
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+Lenders struggle with:
 
-## Learn More
+- Inefficient processes
+- High operational costs
+- Challenges in accurately assessing risk for diverse business types
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Our Solution
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+Our digital platform streamlines and automates the underwriting process for business mortgages. Key features include:
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+- User-friendly interface for businesses to submit loan applications
+- Efficient processing and evaluation tools for lenders
+- Simplified data collection
+- Automated risk assessment
+- Clear and quick decisions on loan applications
 
-## How do I deploy this?
+## Core Technology
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Our platform leverages cutting-edge technology to deliver a seamless experience:
+
+- Upstage API for Document OCR, Layout Analysis, and LLM processing
+- Responsive web application with intuitive user interface
+- Secure cloud-based infrastructure for data storage and processing
+- API integrations with financial databases and credit bureaus
+
+## Who We Serve
+
+### Businesses Seeking Mortgage Financing
+
+- Small to medium-sized enterprises (SMEs) across various industries
+- Businesses looking to purchase commercial property or refinance existing mortgages
+- Benefits:
+  - Faster, more transparent application process
+  - Potentially quicker access to funding
+
+### Lenders Offering Business Mortgages
+
+- Banks, credit unions, and other financial institutions providing commercial mortgage loans
+- Benefits:
+  - Reduced operational costs
+  - Improved risk assessment
+  - Ability to process a higher volume of loan applications more efficiently
+
+## Getting Started
+
+To run the application:
+
+git clone https://github.com/chiatzeheng/daechul.ai
+cd daechul.ai
+bun install 
+turbo dev
+
+To run backend
+
+cd backend
+pip install -r requirements.txt 
+py llm.py
