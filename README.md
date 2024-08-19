@@ -26,7 +26,10 @@ Our digital platform streamlines and automates the underwriting process for busi
 - Automated risk assessment
 - Clear and quick decisions on loan applications
 
-https://github.com/user-attachments/assets/abd6f447-1523-408b-bc44-8085cb7cea5e
+
+
+https://github.com/user-attachments/assets/ea33addc-dde1-4ba9-8652-a2299ca19c6d
+
 
 ## Core Technology
 
