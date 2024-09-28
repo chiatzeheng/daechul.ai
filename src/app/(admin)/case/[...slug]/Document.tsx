@@ -160,9 +160,9 @@ const DocumentList = ({ documents }: { documents: Document[] }) => {
                                                         <SelectItem value="CANCELLED">Cancelled</SelectItem>
                                                     </SelectContent>
                                                 </Select>
-                                                <Button onClick={() => {
+                                                <Button onClick={async () => {
                                                     if (editingDoc && newStatus) {
-                                                        updateStatus(editingDoc.id, newStatus);
+                                                        await updateStatus(editingDoc.id, newStatus);
                                                     }
                                                 }}>
                                                     Update Status

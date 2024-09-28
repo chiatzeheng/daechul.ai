@@ -19,7 +19,7 @@ export default function SplashPage() {
             >
                 <h1 className=" text-6xl font-bold mb-6 text-center
             text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-pink-500">Daechul.AI</h1>
-                <a> We simplify the loan application process for Applicants & Stakeholders in the financial industry</a>
+                <p> We simplify the loan application process for Applicants & Stakeholders in the financial industry</p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                     {features.map((feature, index) => (

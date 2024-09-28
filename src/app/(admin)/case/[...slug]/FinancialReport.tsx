@@ -5,9 +5,7 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle, } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { BusinessLoanApplication } from '@/lib/types';
-import { Dialog } from './Dialog';
-import Link from 'next/link';
-import { uuid } from 'uuidv4';
+import { ADialog } from './Dialog';
 
 const AIUnderwritingReport = ({ data, documents }: { data: BusinessLoanApplication, documents: string[] }) => {
     // const [isGenerating, setIsGenerating] = useState(false);
@@ -106,7 +104,7 @@ const AIUnderwritingReport = ({ data, documents }: { data: BusinessLoanApplicati
                 <div className='flex flex-row justify-between'>
                     <CardTitle className="text-2xl font-semibold text-gray-800">AI Mortgage Underwriting Report</CardTitle>
 
-                    <Dialog />
+                    <ADialog />
                 </div>
                 <CardDescription className="text-gray-600">Generate a comprehensive underwriting analysis for commercial mortgage applications</CardDescription>
 
@@ -123,9 +121,7 @@ const AIUnderwritingReport = ({ data, documents }: { data: BusinessLoanApplicati
 
 
                 <Button className="w-full h-12 bg-black text-white font-semibold text-lg py-3 transition-colors duration-300">
-                    <Link href={`/report/${uuid()}`}>
-                        Generate AI Underwriting Report
-                    </Link>
+                    Generate A Report
                 </Button>
 
                 {/* <Button
