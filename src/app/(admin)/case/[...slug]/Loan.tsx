@@ -21,6 +21,7 @@ const LoanDetails = ({ data }: { data: BusinessLoanApplication }) => (
         </CardHeader>
         <CardContent>
             <div className="grid grid-cols-2 gap-4">
+
                 <InfoItem label="Tax ID" value={data.taxId} />
                 <InfoItem label="Year Established" value={data.yearEstablished} />
                 <InfoItem label="Annual Revenue" value={formatCurrency(data.annualRevenue)} />
@@ -40,7 +41,6 @@ const LoanDetails = ({ data }: { data: BusinessLoanApplication }) => (
                 <InfoItem label="Updated At" value={formatDate(data.updatedAt)} />
             </div>
             <div className="mt-6">
-                <h2 className="text-xl font-semibold mb-2">Loan Status</h2>
                 <ul className="space-y-2">
                     {data.loanBridge?.map((bridge) => (
                         <li key={bridge.id} className="flex justify-between items-center">

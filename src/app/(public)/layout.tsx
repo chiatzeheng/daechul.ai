@@ -10,7 +10,9 @@ const PublicLayout = async ({ children }: Props) => {
 
     if (session?.user.role === 'admin') {
         return redirect('/homepage')
-    } else if (session?.user.role === 'user') {
+    }
+
+    if (session?.user.role === 'user') {
         return redirect('/dashboard')
     }
 

@@ -3,7 +3,6 @@ import { api } from '@/trpc/server';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import ActionPanel from './Action';
 import LoanDetails from './Loan';
 import DocumentList from './Document';
 import FinancialReport from './FinancialReport';
@@ -14,12 +13,7 @@ import FinancialReport from './FinancialReport';
 const LoanDashboard = async ({ params }: { params: { slug: string, userId: string } }) => {
     const data = await api.loan.getAdminLoanByID({ id: params.slug[0] ?? '1', userId: params.slug[1] ?? '1' });
 
-    const passedData = data
-    delete passedData.loanBridge
-
     const documents = await api.loan.getDocuments({ userId: params.slug[1] ?? '1' })
-
-    console.log(documents);
 
     if (!data) {
         return <div>Loan not found</div>;
@@ -30,8 +24,6 @@ const LoanDashboard = async ({ params }: { params: { slug: string, userId: strin
     for (const document of documents) {
         docs.push(document.url)
     }
-
-
 
     return (
         <div className=" p-4">
@@ -53,8 +45,8 @@ const LoanDashboard = async ({ params }: { params: { slug: string, userId: strin
                 <div>
                 </div>
             </div>
-            <FinancialReport data={passedData} documents={docs} />
-            <ActionPanel id={data?.loanBridge?.[0]?.loanId ?? ''} userId={data?.loanBridge?.[0]?.userId ?? ''} />
+            <FinancialReport data={data} documents={docs} />
+            {/* <ActionPanel id={data?.loanBridge?.[0]?.loanId ?? ''} userId={data?.loanBridge?.[0]?.userId ?? ''} /> */}
 
         </div>
     );

@@ -43,7 +43,6 @@ const AdminTables = ({ data }: { data: LoanData[] }) => {
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-[200px]">Name</TableHead>
                         <TableHead>Email</TableHead>
                         <TableHead>Loan ID</TableHead>
                         <TableHead>Created At</TableHead>
@@ -54,12 +53,11 @@ const AdminTables = ({ data }: { data: LoanData[] }) => {
                     {loans.map((loanData) => (
 
                         <TableRow key={loanData.id} className="cursor-pointer hover:bg-gray-50">
-                            <TableCell className="font-medium">
+
+                            <TableCell>
                                 <Link href={`/case/${loanData.loanId}/${loanData.userId}`} className="flex items-center">
-                                    <span className="ml-2">{loanData.user.name}</span>
-                                </Link>
-                            </TableCell>
-                            <TableCell>{loanData.user.email}</TableCell>
+
+                                    {loanData.user.email}</Link></TableCell>
                             <TableCell>{loanData.loanId}</TableCell>
 
                             <TableCell>{new Date(loanData.createdAt).toLocaleString()}</TableCell>
