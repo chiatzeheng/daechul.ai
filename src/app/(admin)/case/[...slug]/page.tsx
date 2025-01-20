@@ -14,12 +14,8 @@ import FinancialReport from './FinancialReport';
 const LoanDashboard = async ({ params }: { params: { slug: string, userId: string } }) => {
     const data = await api.loan.getAdminLoanByID({ id: params.slug[0] ?? '1', userId: params.slug[1] ?? '1' });
 
-    const passedData = data
-    delete passedData.loanBridge
-
     const documents = await api.loan.getDocuments({ userId: params.slug[1] ?? '1' })
 
-    console.log(documents);
 
     if (!data) {
         return <div>Loan not found</div>;
@@ -53,7 +49,7 @@ const LoanDashboard = async ({ params }: { params: { slug: string, userId: strin
                 <div>
                 </div>
             </div>
-            <FinancialReport data={passedData} documents={docs} />
+            <FinancialReport data={data} documents={docs} />
             <ActionPanel id={data?.loanBridge?.[0]?.loanId ?? ''} userId={data?.loanBridge?.[0]?.userId ?? ''} />
 
         </div>

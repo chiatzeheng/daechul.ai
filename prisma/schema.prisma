@@ -77,8 +77,9 @@ model LoanBridge {
     createdAt DateTime       @default(now())
     updatedAt DateTime       @updatedAt
 
-    user User @relation(fields: [userId], references: [id])
-    loan Loan @relation(fields: [loanId], references: [id])
+    user             User              @relation(fields: [userId], references: [id])
+    loan             Loan              @relation(fields: [loanId], references: [id])
+    loanApplications LoanApplication[]
 
     @@unique([userId, loanId])
     @@index([userId])
@@ -116,6 +117,14 @@ model Loan {
     @@index([userId])
 }
 
+model LoanApplication {
+    loanBridgeId String     @id
+    application  Json
+    loanBridge   LoanBridge @relation(fields: [loanBridgeId], references: [id])
+
+    @@index([loanBridgeId])
+}
+
 model AuditLog {
     id        String   @id @default(cuid())
     userId    String
@@ -125,6 +134,12 @@ model AuditLog {
     user      User     @relation(fields: [userId], references: [id])
 
     @@index([userId])
+}
+
+model VectorTable {
+    id         String                 @id @default(cuid())
+    embeddings Unsupported("VECTOR")?
+    values     Json
 }
 
 enum DocumentStatus {

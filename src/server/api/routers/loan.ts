@@ -277,6 +277,30 @@ export const loanRouter = createTRPCRouter({
     })
     console.log(response.data);
      return response.data;
-  })
+  }),
 
+
+  postReport: protectedProcedure
+    .input(z.object(
+      {id: z.string(), data: z.any()}))
+    .mutation(async ({ input, ctx }) => {
+      await ctx.db.loanApplication.create({
+        data: {
+          loanBridgeId: input.id,
+          application: input.data,
+        }
+    })}),
+  
+  getLoanApplications: protectedProcedure
+  .input(z.object({
+    id: z.string(),
+  }))
+  .query(async ({ ctx, input }) => {
+      return ctx.db.loanApplication.findMany({
+        where: {
+          loanBridgeId: input.id,
+        },
+      }
+      );
+    })
 });

@@ -85,3 +85,37 @@ export type LoanBridge = {
     };
   }
   
+
+ export interface AIUnderwritingReport {
+  loan_decision: string;
+  confidence_score: number;
+  risk_assessment: {
+    overall_risk_level: string;
+    financial_health_score: number;
+    repayment_capacity_score: number;
+    collateral_quality_score: number;
+  };
+  financial_analysis: {
+    revenue_trend: string;
+    profitability_analysis: string;
+    liquidity_assessment: string;
+    debt_structure: string;
+  };
+  business_evaluation: {
+    industry_position: string;
+    growth_potential: string;
+    management_capability: string;
+  };
+  loan_purpose_alignment: string;
+  property_evaluation: string;
+  key_strengths: string[];
+  key_concerns: string[];
+  mitigating_factors: string[];
+  recommended_loan_terms: {
+    interest_rate: string;
+    loan_term: string;
+    collateral_requirements: string;
+    special_conditions: string[];
+  };
+  final_recommendation: string;
+};
