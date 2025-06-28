@@ -1,4 +1,5 @@
 import AuthChecker from "@/components/AuthChecker"
+import { getServerAuthSession } from "@/server/auth"
 import { Suspense } from "react"
 
 type Props = {
@@ -7,10 +8,12 @@ type Props = {
 
 export const dynamic = 'force-dynamic';
 
-const AdminLayout = ({ children }: Props) => {
+const AdminLayout = async ({ children }: Props) => {
+    const session = await getServerAuthSession()
+    
     return (
         <Suspense>
-            <AuthChecker userRole="admin">
+            <AuthChecker userRole="admin" session={session}>
                 {children}
             </AuthChecker>
         </Suspense>
