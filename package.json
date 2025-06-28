@@ -53,6 +53,7 @@
     "mapbox-gl": "^3.5.2",
     "next": "^14.2.4",
     "next-auth": "^4.24.7",
+    "openssl": "^2.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
