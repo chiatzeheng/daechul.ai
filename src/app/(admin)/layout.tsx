@@ -3,6 +3,8 @@ import { getServerAuthSession } from "@/server/auth"
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
 
+export const dynamic = 'force-dynamic';
+
 type Props = {
     children: React.ReactNode
 }
