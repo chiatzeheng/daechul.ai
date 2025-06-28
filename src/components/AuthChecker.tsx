@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import Navigation from "./Navigation"
+import { Header } from "./layout/Header"
 import { Session } from "next-auth"
 
 type Props = {
@@ -41,10 +41,12 @@ const AuthChecker = ({ children, userRole, redirectTo, session }: Props) => {
     }
 
     return (
-        <>
-            {session?.user && <Navigation user={session.user} />}
-            {children}
-        </>
+        <div className="min-h-screen bg-gray-50">
+            {session?.user && <Header user={session.user} />}
+            <main className="flex-1">
+                {children}
+            </main>
+        </div>
     )
 }
 
