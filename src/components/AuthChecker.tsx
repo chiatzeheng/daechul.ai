@@ -1,17 +1,15 @@
 import { redirect } from "next/navigation"
 import Navigation from "./Navigation"
 import { Session } from "next-auth"
-import { getServerAuthSession } from "@/server/auth"
 
 type Props = {
     children: React.ReactNode
     userRole?: 'admin' | 'user'
     redirectTo?: string
+    session?: Session | null
 }
 
-const AuthChecker = async ({ children, userRole, redirectTo }: Props) => {
-    const session = await getServerAuthSession()
-    
+const AuthChecker = ({ children, userRole, redirectTo, session }: Props) => {
     // Handle redirects based on user role and authentication status
     if (userRole === 'admin' && session?.user.role !== 'admin') {
         if (session?.user.role === 'user') {
