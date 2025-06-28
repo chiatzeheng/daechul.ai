@@ -1,26 +1,20 @@
-import Navigation from "@/components/Navigation"
-import { getServerAuthSession } from "@/server/auth"
-import { redirect } from "next/navigation"
+import AuthChecker from "@/components/AuthChecker"
 import { Suspense } from "react"
-
-export const dynamic = 'force-dynamic';
 
 type Props = {
     children: React.ReactNode
 }
-const PublicLayout = async ({ children }: Props) => {
-    const session = await getServerAuthSession()
 
-    if (session?.user.role === 'user') {
-        return redirect('/dashboard')
-    }
+export const dynamic = 'force-dynamic';
 
+const AdminLayout = ({ children }: Props) => {
     return (
         <Suspense>
-            <Navigation user={session?.user} />
-            {children}
+            <AuthChecker userRole="admin">
+                {children}
+            </AuthChecker>
         </Suspense>
     )
 }
 
-export default PublicLayout
+export default AdminLayout

@@ -1,25 +1,16 @@
-import { getServerAuthSession } from "@/server/auth"
-import { redirect } from "next/navigation"
+import AuthChecker from "@/components/AuthChecker"
 
 type Props = {
     children: React.ReactNode
 }
-const PublicLayout = async ({ children }: Props) => {
-    const session = await getServerAuthSession()
 
+export const dynamic = 'force-dynamic';
 
-    if (session?.user.role === 'admin') {
-        return redirect('/homepage')
-    }
-
-    if (session?.user.role === 'user') {
-        return redirect('/dashboard')
-    }
-
+const PublicLayout = ({ children }: Props) => {
     return (
-        <>
+        <AuthChecker>
             {children}
-        </>
+        </AuthChecker>
     )
 }
 
